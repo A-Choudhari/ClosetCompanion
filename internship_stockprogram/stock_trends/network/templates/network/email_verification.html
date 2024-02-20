@@ -1,0 +1,49 @@
+{% extends "network/layout.html" %}
+
+{% block body %}
+    {% if message %}
+        <div class="alert alert-danger" role="alert">{{ message }}</div>
+    {% endif %}
+    <div style="margin: 0 auto;text-align:center;">
+        <div style="padding:20px;top:50%;left:50%;margin:0 auto;transform: transform(-50%, -50%);width:40%;background:white;align-items:center;border-radius:10px;border:5px;height:100vh;justify-content:center;">
+            <h1>Email Verification</h1>
+            <p>We emailed you the six digit code to your email. Enter the code below to confirm your email address</p>
+            <form action="{% url 'verification' id %}" method="post">
+                {% csrf_token %}
+                <div style="display:flex;align-items:center;justify-content:center;margin:40px 0;">
+                    <input autofocus oninput="moveInput(this, 'email_verification_code_2', 'email_verification_code_1')" id="email_verification_code_1" type="text" maxlength="1" min="0" style=" border-radius:10px;border:1px solid;font-size:30px;width:75px;height:80px;margin:10px;text-align:center;font-weight:300;font-family:sans-serif;" max="9" name="email_verification_code_1" required>
+                    <input oninput="moveInput(this, 'email_verification_code_3', 'email_verification_code_1')" id="email_verification_code_2" type="text" maxlength="1" style="border-radius:10px;border:1px solid;font-size:30px;width:75px;height:80px;margin:10px;text-align:center;font-weight:300;font-family:sans-serif;" min="0" max="9" name="email_verification_code_2" required>
+                    <input oninput="moveInput(this, 'email_verification_code_4', 'email_verification_code_2')" id="email_verification_code_3" type="text" maxlength="1" min="0" style=" border-radius:10px;border:1px solid;font-size:30px;width:75px;height:80px;margin:10px;text-align:center;font-weight:300;font-family:sans-serif;" max="9" name="email_verification_code_3" required>
+                    <input oninput="moveInput(this, 'email_verification_code_5', 'email_verification_code_3')" id="email_verification_code_4" type="text" maxlength="1" min="0" style=" border-radius:10px;border:1px solid;font-size:30px;width:75px;height:80px;margin:10px;text-align:center;font-weight:300;font-family:sans-serif;"  max="9" name="email_verification_code_4" required>
+                    <input oninput="moveInput(this, 'email_verification_code_6', 'email_verification_code_4')" id="email_verification_code_5" type="text" maxlength="1" min="0" style=" border-radius:10px;border:1px solid;font-size:30px;width:75px;height:80px;margin:10px;text-align:center;font-weight:300;font-family:sans-serif;" max="9" name="email_verification_code_5" required>
+                    <input oninput="moveInput(this, 'email_verification_code_6', 'email_verification_code_5')" type="text" maxlength="1" min="0" id="email_verification_code_6" style=" border-radius:10px;border:1px solid;font-size:30px;width:75px;height:80px;margin:10px;text-align:center;font-weight:300;font-family:sans-serif;" max="9" name="email_verification_code_6" required>
+                </div>
+                <input class="btn btn-primary" type="submit" value="Verify">
+            </form>
+            <small>If you didn't receive the code <a href="{% url 'verification' id %}">Click Here</a></small>
+        </div>
+
+    </div>
+
+    <script>
+        function moveInput(input, nextInputId, prevInputId) {
+          const value = input.value;
+
+          // Move to the next input if there is a next input field
+          if (nextInputId) {
+            const nextInput = document.getElementById(nextInputId);
+            if (nextInput) {
+              nextInput.focus();
+            }
+          }
+
+          // If the user erased something, move to the previous input
+          if (value === '' && prevInputId) {
+            const prevInput = document.getElementById(prevInputId);
+            if (prevInput) {
+              prevInput.focus();
+            }
+          }
+        }
+    </script>
+{% endblock %}

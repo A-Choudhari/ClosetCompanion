@@ -1,0 +1,50 @@
+{% extends "network/layout.html" %}
+{% block body %}
+    <div style="margin: 0 auto;text-align:center;">
+        <div style="padding:20px;top:50%;left:50%;margin:0 auto;transform: transform(-50%, -50%);width:40%;background:white;align-items:center;border-radius:10px;border:5px;height:100vh;justify-content:center;">
+            <h1>Add A New Clothing Item</h1>
+            <form action="{% url 'user_closet' %}" method="POST" enctype="multipart/form-data">
+                <!-- Clothing Item Name -->
+                <label for="item_name">Cloth Name:</label>
+                <input class="form-control" aria-label="default input example" type="text" id="item_name" name="item_name" required>
+                <br>
+                <!-- Category -->
+                <label for="category" class="form-label">Category:</label>
+                <input class="form-control" list="datalistOptions" id="category" name="category">
+                    <datalist id="datalistOptions">
+                      <option value="Shirt">
+                      <option value="Pants">
+                      <option value="Shoes">
+                    </datalist>
+                </input>
+                <br>
+                <!-- Color -->
+                <label for="color">Color:</label>
+                <input class="form-control" aria-label="default input example" type="text" id="color" name="color" required>
+                <br>
+                <!-- Size -->
+                <label class="form-label" for="size">Size:</label>}
+                <input class="form-control" list="datalistOptions_2" id="size" name="size">
+                    <datalist id="datalistOptions_2">
+                        <option value="S">S</option>
+                        <option value="M">M</option>
+                        <option value="L">L</option>
+                        <option value="XL">XL</option>
+                    </datalist>
+                    <!-- Add more categories as needed -->
+                </input>
+                <br>
+
+                <!-- Image Upload -->
+                <div class="input-group mb-3">
+                    {{ form.image }}
+                  <label class="input-group-text" for="inputGroupFile02">Upload</label>
+                </div>
+                <br>
+                <!-- Submit Button -->
+                <button class="btn btn-primary" type="submit">Add Item</button>
+            </form>
+        </div>
+    </div>
+{% endblock %}
+

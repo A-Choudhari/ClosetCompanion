@@ -1,0 +1,66 @@
+{% load static %}
+<!DOCTYPE html>
+
+<html lang="en">
+    <head>
+        <title>{% block title %}{% endblock %}</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+        <link href="{% static 'network/styles.css' %}" rel="stylesheet">
+        <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.13.0/dist/tf.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/posenet@2.2.1/dist/posenet.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/ar.js@2.0.8"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src="https://j11y.io/demos/plugins/jQuery/autoresize.jquery.js"></script>
+        <script src="https://kit.fontawesome.com/31f4337ba1.js"></script>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js" integrity="sha384-fbbOQedDUMZZ5KreZpsbe1LCZPVmfTnH7ois6mU1QK+m14rQ1l2bGBq41eYeM/fS" crossorigin="anonymous"></script>
+    </head>
+    <body>
+
+    <script>
+    function myFunction() {
+        var x = document.getElementById("myLinks");
+        if (x.style.display === "block") {
+            x.style.display = "none";
+        } else {
+            x.style.display = "block";
+        }
+    }
+    </script>
+    <div class="topnav navbar navbar-expand-lg navbar-light bg-light">
+        <a href="{% url 'index' %}" id="home" class="active nav-link"><strong>Fashion</strong></a>
+      <!-- Navigation links (hidden by default) -->
+      {% if user.is_authenticated %}
+           <div id="myLinks" class="navbar-nav mr-auto" style="display:none">
+               <a class="active nav-link" style="margin:0;display:inline;float:left;padding:10px" href="{% url 'user_profile' %}">Style Preferences</a>
+               <a class="active nav-link" style="margin:0;display:inline;float:left;padding:10px" href="{% url 'user_closet' %}">Closet</a>
+               <a class="active nav-link" style="margin:0;display:inline;float:left;padding:10px" href="{% url 'logout' %}">Log Out</a>
+          </div>
+          <a href="javascript:void(0);" class="icon nav-link" onclick="myFunction()">
+            <i class="fa fa-bars"></i>
+          </a>
+      {% else %}
+          <div id ="myLinks" class="navbar-nav mr-auto" style="display:none">
+              <a class="active nav-link" style="margin:0;display:inline;float:left;padding:10px" href="{% url 'login' %}">Login</a>
+              <a class="active nav-link" style="margin:0;display:inline;float:right;padding:10px" href="{% url 'register' %}">Register</a>
+          </div>
+          <a href="javascript:void(0);" class="icon nav-link" onclick="myFunction()">
+            <i class="fa fa-bars"></i>
+          </a>
+      {% endif %}
+    </div>
+
+
+
+
+
+        
+        <div id="body" class="body">
+            {% block body %}
+            {% endblock %}
+        </div>
+    </body>
+</html>

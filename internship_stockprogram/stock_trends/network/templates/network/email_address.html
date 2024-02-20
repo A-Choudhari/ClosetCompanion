@@ -1,0 +1,24 @@
+{% extends "network/layout.html" %}
+
+{% block body %}
+
+
+    {% if message %}
+        <div class="alert alert-danger" role="alert">{{ message }}</div>
+    {% endif %}
+    <div style="margin: 0 auto;text-align:center;">
+        <div style="padding:20px;top:50%;left:50%;margin:0 auto;transform: transform(-50%, -50%);width:40%;background:white;align-items:center;border-radius:10px;border:5px;height:100vh;justify-content:center;">
+            <h1>Email Address</h1>
+            <form action="{% url 'email_address' %}" method="post">
+                {% csrf_token %}
+                <div class="txt_field">
+                    <input autofocus type="text" name="email_address" required>
+                    <span></span>
+                    <label>Enter email</label>
+                </div>
+                <input class="btn btn-primary" type="submit" value="Submit">
+            </form>
+        </div>
+
+    </div>
+{% endblock %}

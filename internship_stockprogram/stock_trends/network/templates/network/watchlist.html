@@ -1,0 +1,62 @@
+{% extends "network/layout.html" %}
+{% block body %}
+    {% if message %}
+        <div class="alert alert-success" role="alert">{{ message }}</div>
+    {% endif %}
+
+
+    <h1>Watchlist</h1>
+
+
+    {% for obj in page_obj %}
+        <div id="card_{{ obj.id }}" class="card" style="width: 18rem;">
+              <img id="item_image_{{ obj.id }}" src="{{ obj.image }}" class="card-img-top" alt="Image not found">
+              <div class="card-body">
+                <h5 class="card-title">
+                    <div class="holder">
+                        <i id="{{ obj.id }}" onclick="likeHandler({{ obj.id }}, liked)" class="fas fa-heart"></i>
+                    </div>
+                </h5>
+                <p id="item_product_info_{{ obj.id }}" class="card-text">{{ obj.product_info }}</p>
+                <button onclick="{% url 'ar' obj.image %}" class="btn btn-primary">Try It On!</button>
+                <a id="item_link_{{ obj.id }}" href="{{ obj.link }}" class="btn btn-primary">Visit this website!</a>
+              </div>
+        </div>
+    {% endfor %}
+
+    {% if posts.has_previous %}
+        <a role="button" class="btn btn-primary" href="?page={{ posts.previous_page_number }}">Previous Page</a>
+    {% endif %}
+    {% if posts.has_next %}
+        <a role="button" class="btn btn-primary" href="?page={{ posts.next_page_number }}">Next Page</a>
+    {% endif %}
+
+<script>
+    function likeHandler(id, liked) {
+        let image = document.getElementById(`item_image_${id}`).sr;
+        let product_info = document.getElementById(`item_product_info_${id}`).textContent;
+        let link = document.getElementById(`item_link_${id}`).href;
+        let divRemvoe = document.getElementById(`card_${id`);
+        divRemove.remove();
+
+        let liked = False;
+        fetch('/watchlist', {
+        method: 'PUT',
+        headers: {"Content-type": "application/json", "X-CSRFtoken":"{{ csrf_token }}"},
+        body: JSON.stringify({
+            image: image,
+            product_info: item_name,
+            link: link,
+            liked: liked,
+          })
+        })
+        .then(response => response.json())
+        .then(result => {
+            // Print result
+            console.log(result);
+            var divToRemove = document.getElementById(`card_${id}`);
+            divToRemove.remove();
+        });
+    }
+    </script>
+{% endblock %}

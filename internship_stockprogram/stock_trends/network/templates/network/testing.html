@@ -1,0 +1,15 @@
+{% extends "network/layout.html" %}
+{% block body %}
+    {% if message %}
+        <div class="alert alert-success" role="alert">{{ message }}</div>
+    {% endif %}
+
+
+    <h1>Finds Online</h1>
+
+
+    {% for obj in image_info %}
+        <img src="{{ obj }}" alt="Not Found">
+    {% endfor %}
+
+{% endblock %}

@@ -1,0 +1,71 @@
+{% extends "network/layout.html" %}
+{% block title %}
+User Profile
+{% endblock %}
+
+
+{% block body %}
+    <div style="margin: 0 auto;text-align:center;">
+        <div style="padding:20px;top:50%;left:50%;margin:0 auto;transform: transform(-50%, -50%);width:40%;background:white;align-items:center;border-radius:10px;border:5px;height:100vh;justify-content:center;">
+            <h1 class="mt-5">User Style Preferences</h1>
+            <form action="{% url 'user_profile' %}" method="post">
+                <!-- User Information -->
+                <div class="mb-3">
+                    <label for="username" class="form-label">Username:</label>
+                    <input type="text" class="form-control" id="username" placeholder="{{ request.user }}" name="username" readonly>
+                </div>
+                <br>
+                <!-- Clothing Items They Own -->
+                <div class="mb-3">
+                    <label for="clothing_items" class="form-label">Clothing Items You Own (comma-separated):</label>
+                    <input type="text" class="form-control" id="clothing_items" name="clothing_items">
+                    {% if data %}
+                        <div>Current Items Listed: {{ data.cloth_item }}</div>
+                    {% else %}
+                        No Current Items Provided
+                    {% endif %}
+                </div>
+
+                <br>
+                <br>
+                <!-- Favorite Styles -->
+                <div class="mb-3">
+                    <label for="favorite_styles" class="form-label">Favorite Styles (comma-separated):</label>
+                    <input type="text" class="form-control" id="favorite_styles" name="favorite_styles">
+                    {% if data %}
+                        <div>Favorite Styles: {{ data.cloth_style }}</div>
+                    {% else %}
+                        No Current Items Provided
+                    {% endif %}
+                </div>
+
+                <br>
+                <br>
+                <!-- Clothing Sizes -->
+                <div class="mb-3">
+                    <label for="clothing_size" class="form-label">Clothing Size:</label>
+                <input class="form-control" list="datalistOptions" id="clothing_size" name="category">
+                    <datalist id="datalistOptions">
+                      <option value="XS">
+                      <option value="S">
+                      <option value="M">
+                      <option value="L">
+                      <option value="XL">
+                    </datalist>
+                </input>
+                    {% if data %}
+                        <div>Current Size: {{ data.cloth_size }}</div>
+                    {% else %}
+                        No Current Items Provided
+                    {% endif %}
+                </div>
+                <br>
+                <!-- Submit Button -->
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Link to Bootstrap JavaScript (optional) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.5.2/dist/js/bootstrap.min.js"></script>
+{% endblock %}

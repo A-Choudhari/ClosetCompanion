@@ -1,0 +1,259 @@
+{% extends "network/layout.html" %}
+{% block body %}
+    {% if message %}
+        <div class="alert alert-success" role="alert">{{ message }}</div>
+    {% endif %}
+    <style>
+        .card-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: flex-start;
+            margin: 10px; /* Add margin as needed */
+            padding:10px;
+        }
+
+        /* Style for each card */
+        .stealth {
+            width: calc(16.66% - 10px); /* 6 columns, minus margin */
+            margin-left: 10px;
+            margin-right: 10px;
+            margin-bottom: 20px; /* Adjust as needed */
+        }
+
+
+        .content {
+          display: flex;
+          justify-content: center;
+          flex-direction: column;
+          align-items: center;
+          width:100%;
+          margin-top:69.5px;
+        }
+        .loader-wrapper {
+          width: 100%;
+          height: 100%;
+          position: absolute;
+          top: 69.5;
+          left: 0;
+          background-color: #242f3f;
+          display:flex;
+          justify-content: center;
+          align-items: center;
+        }
+        .loader {
+          display: inline-block;
+          width: 30px;
+          height: 30px;
+          position: relative;
+          border: 4px solid #Fff;
+          animation: loader 2s infinite ease;
+        }
+        .loader-inner {
+          vertical-align: top;
+          display: inline-block;
+          width: 100%;
+          background-color: #fff;
+          animation: loader-inner 2s infinite ease-in;
+        }
+
+        @keyframes loader {
+          0% { transform: rotate(0deg);}
+          25% { transform: rotate(180deg);}
+          50% { transform: rotate(180deg);}
+          75% { transform: rotate(360deg);}
+          100% { transform: rotate(360deg);}
+        }
+
+        @keyframes cloader-inner {
+          0% { height: 0%;}
+          25% { height: 0%;}
+          50% { height: 100%;}
+          75% { height: 100%;}
+          100% { height: 0%;}
+        }
+    </style>
+    {% if request.user.is_authenticated %}
+        <div id="title">
+        </div>
+        <div class="card-container" id="card-container">
+            <div class="loader-wrapper">
+                <span class="loader"><span class="loader-inner"></span></span>
+            </div>
+        </div>
+
+        <div id="pagination-container"></div>
+    {% endif %}
+    <script>
+        function likeHandler(element, image, url, product_info) {
+            const liked = false;
+            if (element.classList.contains('far'))
+            {
+                btn.classList.remove("far");
+                btn.classList.add("fas");
+                liked = true
+            } else {
+                btn.classList.remove("fas");
+                btn.classList.add("far");
+            }
+
+            fetch('/watchlist', {
+            method: 'PUT',
+            headers: {"Content-type": "application/json", "X-CSRFtoken":"{{ csrf_token }}"},
+            body: JSON.stringify({
+                image: image,
+                product_info: product_info,
+                link: url,
+                liked: liked
+              })
+            })
+            .then(response => response.json())
+            .then(result => {
+                // Print result
+                console.log(result);
+            });
+        }
+
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const itemsPerPage = 28;
+            let currentPage = 1;
+            var titleDiv = document.getElementById('title');
+
+            if (titleDiv) {
+                generateDummyData()
+                    .then(data => {
+                        console.log(data.length);
+                        const c = document.createElement('center');
+                        const d = document.createElement('h1');
+                        d.textContent = "Finds Online";
+                        c.appendChild(d);
+                        const title = document.getElementById('title');
+                        title.appendChild(c);
+                        const b = document.createElement('br');
+                        title.appendChild(b);
+                        renderItems(currentPage, itemsPerPage, data);
+                    })
+                    .catch(error => {
+                        console.error('Error fetching data:', error);
+                    })
+            } else {
+                console.error("Not Signed In");
+            }
+        });
+        // Function to generate dummy data (replace with your actual data)
+        function generateDummyData() {
+            return fetch('user_data')
+            .then(response => response.json())
+            .then(page_obj => {
+                // Print email
+                return page_obj;
+            });
+        }
+
+        // Function to render items for the current page
+        function renderItems(currentPage, itemsPerPage, data) {
+            const contentContainer = document.getElementById('card-container');
+            const body = document.getElementById('title');
+            contentContainer.innerHTML = '';
+            const center = document.createElement('center');
+            body.appendChild(center);
+            const newline = document.createElement('br');
+            contentContainer.appendChild(newline);
+            const startIndex = (currentPage - 1) * itemsPerPage;
+            const endIndex = startIndex + itemsPerPage;
+            const currentPageItems = data.slice(startIndex, endIndex);
+
+            currentPageItems.forEach(item => {
+                const listItem = document.createElement('div');
+                listItem.classList.add("card", "stealth");
+                listItem.style.width = "18rem";
+                const myImage = document.createElement('img');
+                // Set the image source and alt attributes
+                myImage.src = item.file;
+                myImage.classList.add("card-img-top");
+                myImage.alt = "Image Not Found";
+                listItem.appendChild(myImage);
+                const card = document.createElement('div');
+                card.classList.add("card-text");
+                const like = document.createElement('h5');
+                const likebutton = document.createElement('div');
+                likebutton.classList.add("holder");
+                const likeimage = document.createElement('i');
+                likeimage.addEventListener('click', function() {
+                    likeHandler(this, item.file, item.link, item.product_info);
+                });
+                if (item.liked) {
+                    likeimage.classList.add("fas", "fa-heart");
+                } else {
+                    likeimage.classList.add("far", "fa-heart");
+                }
+                likebutton.appendChild(likeimage);
+                like.appendChild(likebutton);
+                card.appendChild(like);
+                const text = document.createElement('p');
+                text.classList.add("card-text");
+                text.innerHTML = item.product_info;
+                card.appendChild(text);
+                const link = document.createElement('a');
+                link.href = item.link;
+                link.target = "_blank";
+                link.classList.add("btn", "btn-primary");
+                link.innerText = "Visit this website!";
+                const aR = document.createElement('a');
+                console.log(item.file);
+                aR.role = "button";
+                aR.href = "{% url 'ar' " + `${item.file}` + " %}";
+                aR.classList.add("btn", "btn-primary");
+                aR.textContent = "Try It On!";
+                card.appendChild(aR);
+                card.appendChild(link);
+                card.appendChild(aR);
+                listItem.appendChild(card);
+                contentContainer.appendChild(listItem);
+            });
+            renderPaginationButtons(currentPage, itemsPerPage, data);
+        }
+
+        // Function to render pagination buttons
+        function renderPaginationButtons(currentPage, itemsPerPage, data) {
+            const paginationContainer = document.getElementById('pagination-container');
+            paginationContainer.innerHTML = '';
+            const centering_page = document.createElement('center');
+            if (currentPage > 1)
+            {
+                const prev = document.createElement('button');
+                prev.classList.add('btn', 'btn-primary');
+                prev.textContent = 'Previous Page';
+                prev.addEventListener('click', () => {
+                    window.scroll({
+                        top: 0,
+                        behavior: 'smooth' // Optional: Add smooth scrolling behavior
+                    });
+                    renderItems(currentPage - 1, 28, data);
+                });
+                centering_page.appendChild(prev);
+            }
+            const totalPages = Math.ceil(data.length / itemsPerPage);
+            const page_number = document.createElement('span');
+            page_number.classList.add('current');
+            page_number.textContent = `Page ${currentPage} of ${totalPages}`;
+            page_number.style.padding = '10px';
+            centering_page.appendChild(page_number);
+            if (currentPage < totalPages)
+            {
+                const next = document.createElement('button');
+                next.classList.add('btn', 'btn-primary');
+                next.textContent = 'Next Page';
+                next.addEventListener('click', () => {
+                    window.scroll({
+                        top: 0,
+                        behavior: 'smooth' // Optional: Add smooth scrolling behavior
+                    });
+                    renderItems(currentPage + 1, 28, data);
+                });
+                centering_page.appendChild(next);
+            }
+            paginationContainer.appendChild(centering_page);
+        }
+    </script>
+{% endblock %}
