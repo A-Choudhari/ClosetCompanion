@@ -4,7 +4,7 @@ import imutils
 import cv2
 import urllib.request
 import numpy as np
-from openai import OpenAI
+#from openai import OpenAI
 from django.conf import settings
 import subprocess
 import sys
@@ -25,39 +25,6 @@ from .ildoonet_tf_pose_estimation.run import open_pose_img
 class VideoCamera(object):
     def __init__(self, image_url):
         self.video = cv2.VideoCapture(0)
-        client = OpenAI(api_key="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")
-        response = client.chat.completions.create(
-            model="gpt-4-vision-preview",
-            messages=[
-                {
-                    "role": "user",
-                    "content": [
-                        {"type": "text",
-                         "text": "a cloth garment that covers the upper body, from the neck to the waist. Pants are an outer garment extending from the waist to the ankle and covering each leg separately.\nWhat is the item shown in the image? Give me just the answer in as few words as possible.\nIs the item a tshirt shown in the image? Give a one word YES or NO answer.\nSeperate the answers with a comma"},
-                        {
-                            "type": "image_url",
-                            "image_url": f"{image_url}",
-                        },
-                    ],
-                }
-            ],
-            max_tokens=300,
-        )
-
-        text_output = response.choices[0].message.content
-
-        output_list = text_output.replace(".", "").replace(", ", ",").split(",")
-        detected_obj = ""
-        recyclable_y_n = ""
-
-        if len(output_list) == 2:
-            detected_obj = output_list[0]
-            recyclable_y_n = output_list[1].lower()
-        if recyclable_y_n == "yes":
-            fetch_tshirt(image_url)
-        elif recyclable_y_n == "no":
-            fetch_pant(image_url)
-
     def __del__(self):
         self.video.release()
 
@@ -74,11 +41,7 @@ class VideoCamera(object):
             if succ:
                 return imge.tobytes()
 
-def fetch_tshirt(image_url):
-    pass
 
-def fetch_pant(image_url):
-    pass
 
 
 class IPWebCam(object):

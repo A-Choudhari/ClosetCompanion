@@ -530,7 +530,7 @@ def webcam_stream(camera):
         frame = camera.get_frame()  # Read a frame from the camera
         #processed_frame = process_frame_with_openpose(frame)
         yield (b'--frame\r\n' b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n\r\n')  # Yield the frame as a multipart response
-        if cv2.waitKey(1) & 0xFF == ord(" "):
+        if cv2.waitKey(0) & 0xFF==ord(' '):
             break
     cv2.destroyAllWindows()  # Release the camera when done
 
